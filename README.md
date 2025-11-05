@@ -16,7 +16,7 @@ rp
     src
     dist  # generated after build
 
-  backend
+  iceberg_app
     Dockerfile
     pom.xml
     src
@@ -29,7 +29,7 @@ rp
 ```
 
 #### What a project should do and how
-Collect all neccessary info about apache iceberg db after connecting to it by a link/url. Send some data a client requires with respect to given filters provided by the client. Then the client visualizes data and provides a convenient interface for a user to do some useful stuff. *A more useful and precise specification will soon be here...*
+Collect all neccessary info about apache iceberg db after connecting to it by a link/url. Send some data a client requires with respect to given filters provided by the client. Then the client visualizes data and provides a convenient interface for a user to do some useful stuff.
 
 
 #### Tech stack & stuff
