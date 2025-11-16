@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @SpringBootApplication
+@RequestMapping("/api")
 public class Main {
 
-  @RequestMapping("/")
-  String home() {
-    return "Hi there!";
+  @RequestMapping("/hello")
+  String hello() {
+    return "Hi there from api!";
   }
 
   public static void main(String[] args) {
@@ -20,3 +21,4 @@ public class Main {
   }
 
 }
+
