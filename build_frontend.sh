@@ -27,6 +27,7 @@ run() {
 run "Entering frontend directory" cd frontend
 run "Building frontend" npm run build
 run "Returning to root directory" cd ..
-run "Copying build to static resources" cp -r frontend/dist/ app/src/main/resources/static/
+rm -rf app/src/main/resources/static/*
+run "Copying build to static resources" cp -r frontend/dist/* app/src/main/resources/static/
 
 echo -e "${GREEN}FRONTEND BUILT${NC}"
