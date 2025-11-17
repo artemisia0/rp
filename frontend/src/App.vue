@@ -1,11 +1,11 @@
-<script setup></script>
+<script setup>
+import { useCounterStore } from '@/stores/counter';
+
+const counter = useCounterStore();
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <button @click="counter.increment">
+    Count: {{ counter.count }} (Double: {{ counter.doubleCount }})
+  </button>
 </template>
-
-<style scoped></style>
