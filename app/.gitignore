@@ -1,6 +1,15 @@
 src/main/resources/static/**
 
 
+
+spark-warehouse/
+metastore_db/
+spark-3.5.7-bin-hadoop3/
+spark-3.5.7-bin-hadoop3-scala2.13/
+warehouse/
+derby.log
+
+
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar

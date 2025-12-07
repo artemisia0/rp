@@ -18,6 +18,27 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
+		<dependency>
+		    <groupId>org.apache.iceberg</groupId>
+		    <artifactId>iceberg-core</artifactId>
+		    <version>1.6.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.iceberg</groupId>
+		    <artifactId>iceberg-api</artifactId>
+		    <version>1.6.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.hadoop</groupId>
+		    <artifactId>hadoop-common</artifactId>
+		    <version>3.3.6</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.hadoop</groupId>
+		    <artifactId>hadoop-client</artifactId>
+		    <version>3.3.6</version>
+		</dependency>
 	</dependencies>
 
 	<!-- Additional lines to be added here... -->
