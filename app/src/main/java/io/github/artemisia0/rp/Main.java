@@ -1,108 +1,88 @@
-/*
 package io.github.artemisia0.rp;
 
-
-///////////////
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-
-@RestController
-@SpringBootApplication
-@RequestMapping("/api")
-public class Main {
-
-  @RequestMapping("/hello")
-  String hello() {
-    return "Hi there from api!";
-  }
-
-  public static void main(String[] args) {
-    SpringApplication.run(Main.class, args);
-  }
-}
-///////
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.security.UserGroupInformation;
 
 import org.apache.iceberg.Table;
 import org.apache.iceberg.Snapshot;
-import org.apache.iceberg.catalog.Catalog;
-import org.apache.iceberg.catalog.TableIdentifier;
-
-// import rest catalog
-
-import java.util.Map;
-
-
-public class Main {
-  public static void main(String[] args) {
-    Catalog catalog = new RESTCatalog();
-    catalog.initialize("rest", Map.of(
-      "uri", "http://localhost:8181",
-      "warehouse", "file:./warehouse"
-    ));
-              
-    TableIdentifier tableId = TableIdentifier.of("db", "mytable");
-    Table table = catalog.loadTable(id);
-
-    System.out.println("=== Snapshots ===");
-    for (Snapshot snap : table.snapshots()) {
-      System.out.printf("Snapshot id: %d, op: %s, ts: %d%n",
-        snap.snapshotId(),
-        snap.operation(),
-        snap.timestampMillis()
-      );
-    }
-  }
-}
-
-*/
-
-
-
-
-
-package io.github.artemisia0.rp;
-
-import org.apache.iceberg.Table;
-import org.apache.iceberg.Snapshot;
-import org.apache.iceberg.catalog.Catalog;
-import org.apache.iceberg.catalog.TableIdentifier;
-import org.apache.iceberg.Table;
-import org.apache.iceberg.Snapshot;
+import org.apache.iceberg.DataFile;
 import org.apache.iceberg.catalog.TableIdentifier;
 import org.apache.iceberg.catalog.Catalog;
-import java.util.Map;
+import org.apache.iceberg.hadoop.HadoopCatalog;
+
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+
+  static {
+    Configuration conf = new Configuration(false);
+    conf.set("fs.defaultFS", "file:///");
+    conf.set("hadoop.security.authentication", "simple");
+    UserGroupInformation.setConfiguration(conf);
+  }
+
   public static void main(String[] args) throws Exception {
-    // Simplest way: just load the table and print snapshots
-    // You must create the table externally (e.g., with Spark or Iceberg CLI)
-    // Example: using a Hadoop warehouse (adjust as needed)
-    // Catalog initialization is omitted for brevity; see Iceberg docs for details
-    // Initialize HadoopCatalog (simplest for local warehouse)
-    org.apache.hadoop.conf.Configuration hadoopConf = new org.apache.hadoop.conf.Configuration();
-    hadoopConf.set("fs.defaultFS", "file:///");
-    String warehousePath = "file://" + new java.io.File("warehouse").getAbsolutePath();
-    org.apache.iceberg.catalog.Catalog catalog = new org.apache.iceberg.hadoop.HadoopCatalog(hadoopConf, warehousePath);
-    TableIdentifier id = TableIdentifier.of("db", "my_table");
-    Table table = catalog.loadTable(id);
-    Iterable<Snapshot> snapshots = table.snapshots();
-    int count = 0;
-    for (Snapshot snap : snapshots) {
-      System.out.printf("Snapshot id: %d, op: %s, ts: %d%n",
-        snap.snapshotId(),
-        snap.operation(),
-        snap.timestampMillis()
+
+    String warehousePath =
+        "file://" + new File("warehouse").getAbsolutePath();
+
+    Configuration hadoopConf = new Configuration();
+    Catalog catalog = new HadoopCatalog(hadoopConf, warehousePath);
+
+    TableIdentifier tableId = TableIdentifier.of("db", "my_table");
+    Table table = catalog.loadTable(tableId);
+
+    List<Snapshot> snapshots = new ArrayList<>();
+    for (Snapshot s : table.snapshots()) {
+      snapshots.add(s);
+      System.out.printf(
+          "Snapshot %d | parent=%s | op=%s | ts=%d%n",
+          s.snapshotId(),
+          s.parentId(),
+          s.operation(),
+          s.timestampMillis()
       );
-      count++;
     }
-    if (count < 2) {
-      System.out.println("Not enough snapshots for diff");
+
+    if (snapshots.size() < 2) {
+      System.out.println("Not enough snapshots to compute diffs.");
       return;
     }
-    // Optionally, print diff info here
+
+    System.out.println("\n=== Snapshot diffs ===");
+
+    for (int i = 1; i < snapshots.size(); i++) {
+      Snapshot curr = snapshots.get(i);
+
+      System.out.printf(
+          "%nSnapshot %d diff (op=%s)%n",
+          curr.snapshotId(),
+          curr.operation()
+      );
+
+      printDiff(table, curr);
+    }
+  }
+
+  private static void printDiff(Table table, Snapshot snapshot) {
+
+    int added = 0;
+    int removed = 0;
+
+    for (DataFile f : snapshot.addedDataFiles(table.io())) {
+      added++;
+    }
+
+    for (DataFile f : snapshot.removedDataFiles(table.io())) {
+      removed++;
+    }
+
+    System.out.printf(
+        "  Added files: %d%n  Removed files: %d%n",
+        added,
+        removed
+    );
   }
 }
