@@ -1,0 +1,153 @@
+▶ Entering frontend directory...
+✔ [32mEntering frontend directory SUCCESS[0m
+▶ Building frontend...
+
+> frontend@0.0.0 build
+> vite build
+
+vite v7.2.2 building client environment for production...
+transforming...
+✓ 32 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                 0.35 kB │ gzip:  0.26 kB
+dist/assets/index-CGT-nqc3.js  86.50 kB │ gzip: 33.88 kB
+✓ built in 1.66s
+✔ [32mBuilding frontend SUCCESS[0m
+▶ Returning to root directory...
+✔ [32mReturning to root directory SUCCESS[0m
+▶ Copying build to static resources...
+✔ [32mCopying build to static resources SUCCESS[0m
+[32mOK[0m
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< io.github.artemisia0:rp >-----------------------
+[INFO] Building rp 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ rp ---
+[INFO] Deleting /home/artem/matfyz/rp/app/target
+[INFO] 
+[INFO] >>> spring-boot:2.7.18:run (default-cli) > test-compile @ rp >>>
+[INFO] 
+[INFO] --- resources:3.2.0:resources (default-resources) @ rp ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] Copying 1 resource
+[INFO] Copying 3 resources
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ rp ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 5 source files to /home/artem/matfyz/rp/app/target/classes
+[INFO] 
+[INFO] --- resources:3.2.0:testResources (default-testResources) @ rp ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Using 'UTF-8' encoding to copy filtered properties files.
+[INFO] skip non existing resourceDirectory /home/artem/matfyz/rp/app/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ rp ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] <<< spring-boot:2.7.18:run (default-cli) < test-compile @ rp <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:2.7.18:run (default-cli) @ rp ---
+[INFO] Attaching agents: []
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/home/artem/.m2/repository/ch/qos/logback/logback-classic/1.2.12/logback-classic-1.2.12.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/home/artem/.m2/repository/org/slf4j/slf4j-reload4j/1.7.36/slf4j-reload4j-1.7.36.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [ch.qos.logback.classic.util.ContextSelectorStaticBinder]
+13:25:33.942 [main] DEBUG org.apache.hadoop.metrics2.lib.MutableMetricsFactory - field org.apache.hadoop.metrics2.lib.MutableRate org.apache.hadoop.security.UserGroupInformation$UgiMetrics.getGroups with annotation @org.apache.hadoop.metrics2.annotation.Metric(sampleName="Ops", always=false, valueName="Time", about="", interval=10, type=DEFAULT, value={"GetGroups"})
+13:25:33.957 [main] DEBUG org.apache.hadoop.metrics2.lib.MutableMetricsFactory - field org.apache.hadoop.metrics2.lib.MutableRate org.apache.hadoop.security.UserGroupInformation$UgiMetrics.loginFailure with annotation @org.apache.hadoop.metrics2.annotation.Metric(sampleName="Ops", always=false, valueName="Time", about="", interval=10, type=DEFAULT, value={"Rate of failed kerberos logins and latency (milliseconds)"})
+13:25:33.957 [main] DEBUG org.apache.hadoop.metrics2.lib.MutableMetricsFactory - field org.apache.hadoop.metrics2.lib.MutableRate org.apache.hadoop.security.UserGroupInformation$UgiMetrics.loginSuccess with annotation @org.apache.hadoop.metrics2.annotation.Metric(sampleName="Ops", always=false, valueName="Time", about="", interval=10, type=DEFAULT, value={"Rate of successful kerberos logins and latency (milliseconds)"})
+13:25:33.958 [main] DEBUG org.apache.hadoop.metrics2.lib.MutableMetricsFactory - field private org.apache.hadoop.metrics2.lib.MutableGaugeInt org.apache.hadoop.security.UserGroupInformation$UgiMetrics.renewalFailures with annotation @org.apache.hadoop.metrics2.annotation.Metric(sampleName="Ops", always=false, valueName="Time", about="", interval=10, type=DEFAULT, value={"Renewal failures since last successful login"})
+13:25:33.958 [main] DEBUG org.apache.hadoop.metrics2.lib.MutableMetricsFactory - field private org.apache.hadoop.metrics2.lib.MutableGaugeLong org.apache.hadoop.security.UserGroupInformation$UgiMetrics.renewalFailuresTotal with annotation @org.apache.hadoop.metrics2.annotation.Metric(sampleName="Ops", always=false, valueName="Time", about="", interval=10, type=DEFAULT, value={"Renewal failures since startup"})
+13:25:33.966 [main] DEBUG org.apache.hadoop.metrics2.impl.MetricsSystemImpl - UgiMetrics, User and group related metrics
+13:25:34.053 [main] DEBUG org.apache.hadoop.util.Shell - Failed to detect a valid hadoop home directory
+java.io.FileNotFoundException: HADOOP_HOME and hadoop.home.dir are unset.
+	at org.apache.hadoop.util.Shell.checkHadoopHomeInner(Shell.java:521)
+	at org.apache.hadoop.util.Shell.checkHadoopHome(Shell.java:492)
+	at org.apache.hadoop.util.Shell.<clinit>(Shell.java:569)
+	at org.apache.hadoop.util.StringUtils.<clinit>(StringUtils.java:80)
+	at org.apache.hadoop.conf.Configuration.getBoolean(Configuration.java:1733)
+	at org.apache.hadoop.security.SecurityUtil.setConfigurationInternal(SecurityUtil.java:106)
+	at org.apache.hadoop.security.SecurityUtil.<clinit>(SecurityUtil.java:95)
+	at org.apache.hadoop.security.UserGroupInformation.initialize(UserGroupInformation.java:311)
+	at org.apache.hadoop.security.UserGroupInformation.setConfiguration(UserGroupInformation.java:365)
+	at io.github.artemisia0.rp.Main.<clinit>(Main.java:23)
+13:25:34.086 [main] DEBUG org.apache.hadoop.util.Shell - setsid exited with exit code 0
+13:25:34.086 [main] DEBUG org.apache.hadoop.security.SecurityUtil - Setting hadoop.security.token.service.use_ip to true
+13:25:34.112 [main] DEBUG org.apache.hadoop.security.Groups -  Creating new Groups object
+13:25:34.113 [main] DEBUG org.apache.hadoop.util.NativeCodeLoader - Trying to load the custom-built native-hadoop library...
+13:25:34.113 [main] DEBUG org.apache.hadoop.util.NativeCodeLoader - Failed to load native-hadoop with error: java.lang.UnsatisfiedLinkError: no hadoop in java.library.path: [/usr/java/packages/lib, /usr/lib64, /lib64, /lib, /usr/lib]
+13:25:34.113 [main] DEBUG org.apache.hadoop.util.NativeCodeLoader - java.library.path=/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+13:25:34.113 [main] WARN org.apache.hadoop.util.NativeCodeLoader - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+13:25:34.114 [main] DEBUG org.apache.hadoop.util.PerformanceAdvisory - Falling back to shell based
+13:25:34.115 [main] DEBUG org.apache.hadoop.security.JniBasedUnixGroupsMappingWithFallback - Group mapping impl=org.apache.hadoop.security.ShellBasedUnixGroupsMapping
+13:25:34.164 [main] DEBUG org.apache.hadoop.security.Groups - Group mapping impl=org.apache.hadoop.security.JniBasedUnixGroupsMappingWithFallback; cacheTimeout=300000; warningDeltaMs=5000
+13:25:34.262 [main] DEBUG org.apache.hadoop.security.UserGroupInformation - Hadoop login
+13:25:34.263 [main] DEBUG org.apache.hadoop.security.UserGroupInformation - hadoop login commit
+13:25:34.264 [main] DEBUG org.apache.hadoop.security.UserGroupInformation - Using local user: UnixPrincipal: artem
+13:25:34.267 [main] DEBUG org.apache.hadoop.security.UserGroupInformation - Using user: "UnixPrincipal: artem" with name: artem
+13:25:34.267 [main] DEBUG org.apache.hadoop.security.UserGroupInformation - User entry: "artem"
+13:25:34.267 [main] DEBUG org.apache.hadoop.security.UserGroupInformation - UGI loginUser: artem (auth:SIMPLE)
+13:25:34.269 [main] DEBUG org.apache.hadoop.fs.FileSystem - Starting: Acquiring creator semaphore for file:///home/artem/matfyz/rp/app/warehouse
+13:25:34.269 [main] DEBUG org.apache.hadoop.fs.FileSystem - Acquiring creator semaphore for file:///home/artem/matfyz/rp/app/warehouse: duration 0:00.001s
+13:25:34.271 [main] DEBUG org.apache.hadoop.fs.FileSystem - Starting: Creating FS file:///home/artem/matfyz/rp/app/warehouse
+13:25:34.272 [main] DEBUG org.apache.hadoop.fs.FileSystem - Loading filesystems
+13:25:34.282 [main] DEBUG org.apache.hadoop.fs.FileSystem - file:// = class org.apache.hadoop.fs.LocalFileSystem from /home/artem/.m2/repository/org/apache/hadoop/hadoop-common/3.4.2/hadoop-common-3.4.2.jar
+13:25:34.285 [main] DEBUG org.apache.hadoop.fs.FileSystem - viewfs:// = class org.apache.hadoop.fs.viewfs.ViewFileSystem from /home/artem/.m2/repository/org/apache/hadoop/hadoop-common/3.4.2/hadoop-common-3.4.2.jar
+13:25:34.287 [main] DEBUG org.apache.hadoop.fs.FileSystem - har:// = class org.apache.hadoop.fs.HarFileSystem from /home/artem/.m2/repository/org/apache/hadoop/hadoop-common/3.4.2/hadoop-common-3.4.2.jar
+13:25:34.289 [main] DEBUG org.apache.hadoop.fs.FileSystem - http:// = class org.apache.hadoop.fs.http.HttpFileSystem from /home/artem/.m2/repository/org/apache/hadoop/hadoop-common/3.4.2/hadoop-common-3.4.2.jar
+13:25:34.291 [main] DEBUG org.apache.hadoop.fs.FileSystem - https:// = class org.apache.hadoop.fs.http.HttpsFileSystem from /home/artem/.m2/repository/org/apache/hadoop/hadoop-common/3.4.2/hadoop-common-3.4.2.jar
+13:25:34.299 [main] DEBUG org.apache.hadoop.fs.FileSystem - hdfs:// = class org.apache.hadoop.hdfs.DistributedFileSystem from /home/artem/.m2/repository/org/apache/hadoop/hadoop-hdfs-client/3.4.2/hadoop-hdfs-client-3.4.2.jar
+13:25:34.306 [main] DEBUG org.apache.hadoop.fs.FileSystem - webhdfs:// = class org.apache.hadoop.hdfs.web.WebHdfsFileSystem from /home/artem/.m2/repository/org/apache/hadoop/hadoop-hdfs-client/3.4.2/hadoop-hdfs-client-3.4.2.jar
+13:25:34.307 [main] DEBUG org.apache.hadoop.fs.FileSystem - swebhdfs:// = class org.apache.hadoop.hdfs.web.SWebHdfsFileSystem from /home/artem/.m2/repository/org/apache/hadoop/hadoop-hdfs-client/3.4.2/hadoop-hdfs-client-3.4.2.jar
+13:25:34.308 [main] DEBUG org.apache.hadoop.fs.FileSystem - Looking for FS supporting file
+13:25:34.308 [main] DEBUG org.apache.hadoop.fs.FileSystem - looking for configuration option fs.file.impl
+13:25:34.332 [main] DEBUG org.apache.hadoop.fs.FileSystem - Looking in service filesystems for implementation class
+13:25:34.332 [main] DEBUG org.apache.hadoop.fs.FileSystem - FS for file is class org.apache.hadoop.fs.LocalFileSystem
+13:25:34.332 [main] DEBUG org.apache.hadoop.fs.FileSystem - Jar location for class org.apache.hadoop.fs.LocalFileSystem : /home/artem/.m2/repository/org/apache/hadoop/hadoop-common/3.4.2/hadoop-common-3.4.2.jar
+13:25:34.336 [main] DEBUG org.apache.hadoop.fs.FileSystem - Checksum verification enabled=true
+13:25:34.337 [main] DEBUG org.apache.hadoop.fs.FileSystem - Creating FS file:///home/artem/matfyz/rp/app/warehouse: duration 0:00.066s
+13:25:34.346 [main] INFO org.apache.iceberg.CatalogUtil - Loading custom FileIO implementation: org.apache.iceberg.hadoop.HadoopFileIO
+13:25:34.416 [main] DEBUG org.apache.hadoop.fs.statistics.impl.IOStatisticsContextIntegration - Created instance IOStatisticsContextImpl{id=1, threadId=1, ioStatistics=counters=();
+gauges=();
+minimums=();
+maximums=();
+means=();
+}
+13:25:34.627 [main] INFO org.apache.iceberg.BaseMetastoreCatalog - Table loaded by catalog: hadoop.db.my_table
+Snapshot 2967717932411734814 | parent=null | op=append | ts=1767568706198
+Snapshot 7947578031816955781 | parent=2967717932411734814 | op=overwrite | ts=1767568709349
+Snapshot 676951508015194905 | parent=7947578031816955781 | op=delete | ts=1767568709592
+
+=== Snapshot diffs ===
+
+Snapshot 7947578031816955781 diff (op=overwrite)
+13:25:34.633 [main] INFO org.apache.iceberg.InternalData - Unable to register Parquet for metadata files: Cannot find method: register
+  Added files: 1
+  Removed files: 1
+
+Snapshot 676951508015194905 diff (op=delete)
+13:25:34.999 [main] DEBUG org.apache.hadoop.fs.statistics.impl.IOStatisticsContextIntegration - Reference lost for threadID for the context: 1
+13:25:34.999 [main] DEBUG org.apache.hadoop.fs.statistics.impl.IOStatisticsContextIntegration - Created instance IOStatisticsContextImpl{id=2, threadId=1, ioStatistics=counters=();
+gauges=();
+minimums=();
+maximums=();
+means=();
+}
+  Added files: 0
+  Removed files: 1
+13:25:35.037 [shutdown-hook-0] DEBUG org.apache.hadoop.fs.FileSystem - FileSystem.close() by method: org.apache.hadoop.fs.FilterFileSystem.close(FilterFileSystem.java:529)); Key: (artem (auth:SIMPLE))@file://; URI: file:///; Object Identity Hash: 1080957a
+13:25:35.038 [shutdown-hook-0] DEBUG org.apache.hadoop.fs.FileSystem - FileSystem.close() by method: org.apache.hadoop.fs.RawLocalFileSystem.close(RawLocalFileSystem.java:960)); Key: null; URI: file:///; Object Identity Hash: 4b4516f1
+13:25:35.041 [Thread-2] DEBUG org.apache.hadoop.util.ShutdownHookManager - Completed shutdown in 0.006 seconds; Timeouts: 0
+13:25:35.062 [Thread-2] DEBUG org.apache.hadoop.util.ShutdownHookManager - ShutdownHookManager completed shutdown.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.227 s
+[INFO] Finished at: 2026-01-05T13:25:35+01:00
+[INFO] ------------------------------------------------------------------------
