@@ -12,9 +12,6 @@ mkdir -p "$WAREHOUSE_DIR"
   --conf spark.sql.catalog.local.warehouse="file://$WAREHOUSE_DIR" \
   -e "\
     CREATE DATABASE IF NOT EXISTS local.db;\
-    CREATE TABLE IF NOT EXISTS local.db.my_table (id INT, data STRING) USING iceberg;\
-    INSERT INTO local.db.my_table VALUES (1, 'a'), (2, 'b');\
-    UPDATE local.db.my_table SET data = 'c' WHERE id = 1;\
-    DELETE FROM local.db.my_table WHERE id = 2;\
+    DROP TABLE IF EXISTS local.db.my_table;\
+    CREATE TABLE local.db.my_table (id INT, data STRING) USING iceberg;\
   "
-

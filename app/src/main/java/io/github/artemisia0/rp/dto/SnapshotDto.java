@@ -16,11 +16,7 @@ public class SnapshotDto {
     }
 
     public long getSnapshotId() { return snapshotId; }
-    public void setSnapshotId(long snapshotId) { this.snapshotId = snapshotId; }
     public Long getParentId() { return parentId; }
-    public void setParentId(Long parentId) { this.parentId = parentId; }
     public String getOperation() { return operation; }
-    public void setOperation(String operation) { this.operation = operation; }
     public long getTimestampMillis() { return timestampMillis; }
-    public void setTimestampMillis(long timestampMillis) { this.timestampMillis = timestampMillis; }
 }

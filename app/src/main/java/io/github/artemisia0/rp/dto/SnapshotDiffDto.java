@@ -1,22 +1,21 @@
 package io.github.artemisia0.rp.dto;
 
+import java.util.List;
+
 public class SnapshotDiffDto {
     private long snapshotId;
-    private int addedFiles;
-    private int removedFiles;
+    private List<String> addedFiles;
+    private List<String> removedFiles;
 
     public SnapshotDiffDto() {}
 
-    public SnapshotDiffDto(long snapshotId, int addedFiles, int removedFiles) {
+    public SnapshotDiffDto(long snapshotId, List<String> addedFiles, List<String> removedFiles) {
         this.snapshotId = snapshotId;
         this.addedFiles = addedFiles;
         this.removedFiles = removedFiles;
     }
 
     public long getSnapshotId() { return snapshotId; }
-    public void setSnapshotId(long snapshotId) { this.snapshotId = snapshotId; }
-    public int getAddedFiles() { return addedFiles; }
-    public void setAddedFiles(int addedFiles) { this.addedFiles = addedFiles; }
-    public int getRemovedFiles() { return removedFiles; }
-    public void setRemovedFiles(int removedFiles) { this.removedFiles = removedFiles; }
+    public List<String> getAddedFiles() { return addedFiles; }
+    public List<String> getRemovedFiles() { return removedFiles; }
 }
