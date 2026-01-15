@@ -34,22 +34,31 @@ onMounted(async () => {
         <strong>Snapshot {{ s.snapshotId }}</strong>
         ({{ s.operation }})
 
-        <div v-if="diffs[s.snapshotId]">
-          <p>Added files:</p>
-          <ul>
-            <li v-for="f in diffs[s.snapshotId].addedFiles" :key="f">
-              {{ f }}
-            </li>
-          </ul>
-
-          <p>Removed files:</p>
-          <ul>
-            <li v-for="f in diffs[s.snapshotId].removedFiles" :key="f">
-              {{ f }}
-            </li>
-          </ul>
+        <div v-if="diffs[s.snapshotId]" style="margin: 1.5em 0; padding: 1em; border: 1px solid #eee; border-radius: 8px; background: #fafbfc;">
+          <template v-if="diffs[s.snapshotId].addedFiles && diffs[s.snapshotId].addedFiles.length">
+            <p style="margin-bottom: 0.3em; font-weight: bold;">Added files:</p>
+            <ul style="margin-top: 0; margin-bottom: 0.7em;">
+              <li v-for="f in diffs[s.snapshotId].addedFiles" :key="f">{{ f }}</li>
+            </ul>
+          </template>
+          <template v-if="diffs[s.snapshotId].removedFiles && diffs[s.snapshotId].removedFiles.length">
+            <p style="margin-bottom: 0.3em; font-weight: bold;">Removed files:</p>
+            <ul style="margin-top: 0; margin-bottom: 0.7em;">
+              <li v-for="f in diffs[s.snapshotId].removedFiles" :key="f">{{ f }}</li>
+            </ul>
+          </template>
+          <template v-if="diffs[s.snapshotId].rowChanges && diffs[s.snapshotId].rowChanges.length">
+            <p style="margin-bottom: 0.3em; font-weight: bold;">Row changes:</p>
+            <ul style="margin-top: 0;">
+              <li v-for="c in diffs[s.snapshotId].rowChanges" :key="c.type + JSON.stringify(c.before) + JSON.stringify(c.after)" style="margin-bottom: 0.2em;">
+                <span v-if="c.type === 'ADDED'">ADDED: {{ c.after }}</span>
+                <span v-else-if="c.type === 'REMOVED'">REMOVED: {{ c.before }}</span>
+                <span v-else-if="c.type === 'UPDATED'">UPDATED: {{ c.before }} → {{ c.after }}</span>
+              </li>
+            </ul>
+          </template>
         </div>
       </li>
     </ul>
-  </div>
+    </div>
 </template>

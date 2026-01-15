@@ -1,3 +1,10 @@
 spring:
   application:
     name: rp
+
+logging:
+  level:
+    org.apache.iceberg.metrics.LoggingMetricsReporter: warn
+    org.apache.iceberg.metrics: warn
+    org.apache.iceberg: warn
+    org.apache.hadoop: warn
