@@ -22,7 +22,7 @@ npm i
 --------------------------------
 
 ### (OPTIONAL) Testing API manually
-*Server endpoints are*
+**Server endpoints are**
 - ```/``` is a root page (frontend static files server by a static spring boot server)
 - ```/api/snapshots``` returns a list of all available snapshots (TODO: add filtering)
 - ```/api/diffs``` returns a list of all diffs (data changes) between snapshots (TODO: add filtering)
@@ -30,8 +30,8 @@ If we have ```n > 0``` snapshots that there will be ```n-1``` diffs (data/snapsh
 
 #### Testing API with ```curl```
 ```sh
-curl curl http://localhost:8080/api/snapshots
+curl http://localhost:8080/api/snapshots
 ```
 ```sh
-curl curl http://localhost:8080/api/diffs
+curl http://localhost:8080/api/diffs
 ```
