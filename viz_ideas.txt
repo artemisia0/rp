@@ -1,0 +1,28 @@
+Some interesting ideas on how to design visualization of data changes (frontend part of the project).
+
+idea 1: snapshot timeline
+	graph (chart) with
+		x-axis: timestamp (of a snapshot)
+		y-axis: number of row changes (added/updated/removed have different colors e.g. green/yellow/red)
+			and point color may be a mix of these colors according to numbers of added/updated/... rows
+
+idea 2: row history visualization (or data lineage type stuff)
+	tracking changes of a specific row over time (based on its ID)
+	there still is a timeline and you can see operations on that specific row over time
+	and by hovering the mouse over a certain point (i.e. row change or operation) you can see
+	operations details like previous value and a new value of attributes and so on...
+
+idea 3: diff viewer
+	inspired by git diff for example.
+	or table with (id, before, after) columnds and some rows which are actual changes
+
+idea 4: heatmap of column changes
+	(e.g column changes frequency or smth else)
+	vague idea but interesting
+
+
+Ideally mix these 4 ideas or enable user to switch between different visualization modes.
+First idea is very important and seems to be good. Second should also be there. Third also.
+Fourth is optional but probably nice to have.
+
+
