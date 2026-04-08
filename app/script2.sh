@@ -11,5 +11,5 @@ mkdir -p "$WAREHOUSE_DIR"
   --conf spark.sql.catalog.local.type=hadoop \
   --conf spark.sql.catalog.local.warehouse="file://$WAREHOUSE_DIR" \
   -e "\
-    INSERT INTO local.db.my_table VALUES (1, 'a'), (2, 'b'), (3, 'c');\
+    INSERT INTO local.db.my_table VALUES (1, 'a'), (2, 'b'), (3, 'c'), (10, 'ahoj zaznam 10');\
   "

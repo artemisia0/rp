@@ -8,3 +8,7 @@ logging:
     org.apache.iceberg.metrics: warn
     org.apache.iceberg: warn
     org.apache.hadoop: warn
+    org.apache.spark: warn
+
+spark:
+  warehouse: file:${user.dir}/warehouse

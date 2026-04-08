@@ -23,25 +23,48 @@ import org.apache.iceberg.io.FileIO;
 @Service
 public class IcebergService {
 
-    private final Catalog catalog;
+    private final Configuration conf;
+    private final String warehouse;
     private final TableIdentifier tableId;
+    private volatile Catalog catalog;
 
     public IcebergService() {
-        Configuration conf = new Configuration(false);
-        conf.set("fs.defaultFS", "file:///");
+        // Workaround for Hadoop compatibility with Java 17+
+        System.setProperty("HADOOP_HOME", "/tmp");
+        
+        this.conf = new Configuration(false);
+        this.conf.set("fs.defaultFS", "file:///");
+        this.conf.set("fs.file.impl", "org.apache.hadoop.fs.LocalFileSystem");
 
-        String warehouse = "file://" + new File("warehouse").getAbsolutePath();
-        this.catalog = new HadoopCatalog(conf, warehouse);
+        this.warehouse = "file://" + new File("warehouse").getAbsolutePath();
         this.tableId = TableIdentifier.of("db", "my_table");
+        this.catalog = createCatalog();
+    }
+
+    private Catalog createCatalog() {
+        return new HadoopCatalog(conf, warehouse);
     }
 
     private Table table() {
         return catalog.loadTable(tableId);
     }
 
+    private Table freshTable() {
+        // Always load table from current catalog and refresh
+        Table table = catalog.loadTable(tableId);
+        table.refresh();
+        return table;
+    }
+
+    public synchronized void reloadCatalog() {
+        // Create a new catalog instance to pick up filesystem changes
+        this.catalog = createCatalog();
+    }
+
     public List<SnapshotDto> listSnapshots() {
+        Table table = freshTable();
         List<SnapshotDto> out = new ArrayList<>();
-        for (Snapshot s : table().snapshots()) {
+        for (Snapshot s : table.snapshots()) {
             out.add(new SnapshotDto(
                 s.snapshotId(),
                 s.parentId(),
@@ -53,7 +76,11 @@ public class IcebergService {
     }
 
     public SnapshotDiffDto diff(long snapshotId) {
-        Table table = table();
+        Table table = freshTable();
+        return diff(table, snapshotId);
+    }
+
+    private SnapshotDiffDto diff(Table table, long snapshotId) {
         Snapshot snapshot = table.snapshot(snapshotId);
 
         if (snapshot == null) {
@@ -126,9 +153,10 @@ public class IcebergService {
     }
 
     public List<SnapshotDiffDto> allDiffs() {
+        Table table = freshTable();
         List<SnapshotDiffDto> diffs = new ArrayList<>();
-        for (Snapshot s : table().snapshots()) {
-            diffs.add(diff(s.snapshotId()));
+        for (Snapshot s : table.snapshots()) {
+            diffs.add(diff(table, s.snapshotId()));
         }
         return diffs;
     }

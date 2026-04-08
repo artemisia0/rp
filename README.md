@@ -8,16 +8,24 @@
 cd frontend/
 npm i
 ```
-#### Populate iceberg with sample data (create some snapshots)
-- download spark: [spark](https://www.apache.org/dyn/closer.lua/spark/spark-3.5.7/spark-3.5.7-bin-hadoop3-scala2.13.tgz) (first link at the top)
-- then ```tar -xf <downloaded_archive>``` (make sure that the result is in ~/Downloads/)
-- run ```create_snapshots.sh``` script in ```app/```
-- feel free to edit ```create_snapshots.sh```, ```script1.sh```, ```script2.sh```, ...
 #### Build and run the whole project
 ```sh
 ./run.sh  # in root directory of the project
 ```
+
+This will:
+- Build the frontend
+- Start Spring Boot server with embedded Spark
+- Initialize the Iceberg catalog
+
 #### Then go to ```http://localhost:8080/``` in a browser
+
+Use the **SQL Workbench** tab to create snapshots with SQL queries:
+```sql
+INSERT INTO local.db.my_table VALUES (11, 'new row');
+UPDATE local.db.my_table SET data = 'updated' WHERE id = 2;
+DELETE FROM local.db.my_table WHERE id = 1;
+```
 
 --------------------------------
 
