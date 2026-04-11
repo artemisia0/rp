@@ -1,58 +1,63 @@
 package io.github.artemisia0.rp.service;
 
+import io.github.artemisia0.rp.dto.IcebergConnectionDto;
 import io.github.artemisia0.rp.dto.SqlResponse;
 import org.apache.spark.sql.SparkSession;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.io.File;
 
 @Service
 public class SparkSqlService {
 
-    private final String warehouse;
+    private final IcebergConnectionService connectionService;
     private SparkSession spark;
 
-    public SparkSqlService(
-        @Value("${spark.warehouse:}") String warehouse
-    ) {
-        this.warehouse = warehouse == null || warehouse.isBlank()
-            ? "file://" + new File("warehouse").getAbsolutePath()
-            : warehouse;
+    public SparkSqlService(IcebergConnectionService connectionService) {
+        this.connectionService = connectionService;
     }
 
     @PostConstruct
-    public void init() {
+    public synchronized void init() {
         // Workaround for Java 17+ compatibility with Hadoop
         System.setProperty("HADOOP_HOME", "/tmp/hadoop");
-        
-        spark = SparkSession.builder()
-            .appName("IcebergDataViz")
-            .master("local[*]")
-            .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions")
-            .config("spark.sql.catalog.local", "org.apache.iceberg.spark.SparkCatalog")
-            .config("spark.sql.catalog.local.type", "hadoop")
-            .config("spark.sql.catalog.local.warehouse", warehouse)
-            .config("spark.ui.enabled", "false")
-            .config("spark.sql.warehouse.dir", warehouse)
-            .config("spark.hadoop.fs.file.impl", "org.apache.hadoop.fs.LocalFileSystem")
-            .config("spark.hadoop.fs.file.impl.disable.cache", "true")
-            .getOrCreate();
-        
+        applyConnection(connectionService.getCurrent());
     }
 
     @PreDestroy
-    public void cleanup() {
+    public synchronized void cleanup() {
         if (spark != null) {
             spark.stop();
         }
     }
 
-    public SqlResponse runSql(String sql) {
+    public synchronized void applyConnection(IcebergConnectionDto connection) {
+        if (spark != null) {
+            spark.stop();
+        }
+
+        String catalog = connection.getCatalog();
+        String warehouse = connection.getWarehouse();
+
+        spark = SparkSession.builder()
+            .appName("IcebergDataViz")
+            .master("local[*]")
+            .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions")
+            .config("spark.sql.catalog." + catalog, "org.apache.iceberg.spark.SparkCatalog")
+            .config("spark.sql.catalog." + catalog + ".type", "hadoop")
+            .config("spark.sql.catalog." + catalog + ".warehouse", warehouse)
+            .config("spark.sql.defaultCatalog", catalog)
+            .config("spark.ui.enabled", "false")
+            .config("spark.sql.warehouse.dir", warehouse)
+            .config("spark.hadoop.fs.file.impl", "org.apache.hadoop.fs.LocalFileSystem")
+            .config("spark.hadoop.fs.file.impl.disable.cache", "true")
+            .getOrCreate();
+    }
+
+    public synchronized SqlResponse runSql(String sql) {
         if (sql == null || sql.trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SQL is required");
         }

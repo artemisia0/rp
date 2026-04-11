@@ -7,15 +7,17 @@ import ColumnHeatmap from './components/ColumnHeatmap.vue';
 import OverviewDashboard from './components/OverviewDashboard.vue';
 import SnapshotExplorer from './components/SnapshotExplorer.vue';
 import SqlWorkbench from './components/SqlWorkbench.vue';
+import ConnectionSettings from './components/ConnectionSettings.vue';
 import { formatTimestamp } from './utils/dataUtils';
 
 const snapshots = ref([]);
 const diffs = ref([]);
 const loading = ref(true);
 const error = ref(null);
-const activeTab = ref('overview');
+const activeTab = ref('connection');
 
 const tabs = [
+  { id: 'connection', label: 'Connection' },
   { id: 'overview', label: 'Overview' },
   { id: 'timeline', label: 'Snapshot Timeline' },
   { id: 'row-history', label: 'Row History' },
@@ -166,7 +168,7 @@ onMounted(loadData);
       </button>
     </header>
 
-    <section class="filters">
+    <section v-if="activeTab !== 'connection' && activeTab !== 'sql-workbench'" class="filters">
       <div class="filter-group">
         <label>
           From snapshot
@@ -221,45 +223,48 @@ onMounted(loadData);
     </nav>
 
     <section class="panel" role="tabpanel">
-      <p v-if="loading" class="status">Loading data...</p>
-      <div v-else-if="error" class="status error">
-        <p>Could not load data. {{ error }}</p>
-        <button type="button" @click="loadData">Retry</button>
-      </div>
-      <div v-else-if="filteredSnapshots.length === 0" class="status">
-        <p>No snapshots match the current filters.</p>
-      </div>
-      <OverviewDashboard
-        v-else-if="activeTab === 'overview'"
-        :snapshots="filteredSnapshots"
-        :diffs="filteredDiffs"
-      />
-      <SnapshotTimeline
-        v-else-if="activeTab === 'timeline'"
-        :snapshots="filteredSnapshots"
-        :diffs-by-snapshot="diffsBySnapshot"
-      />
-      <RowHistory
-        v-else-if="activeTab === 'row-history'"
-        :snapshots="filteredSnapshots"
-        :diffs="filteredDiffs"
-      />
-      <DiffViewer
-        v-else-if="activeTab === 'diff-viewer'"
-        :snapshots="filteredSnapshots"
-        :diffs="filteredDiffs"
-      />
-      <ColumnHeatmap
-        v-else-if="activeTab === 'heatmap'"
-        :snapshots="filteredSnapshots"
-        :diffs="filteredDiffs"
-      />
-      <SnapshotExplorer
-        v-else-if="activeTab === 'snapshot-explorer'"
-        :snapshots="filteredSnapshots"
-        :diffs-by-snapshot="diffsBySnapshot"
-      />
-      <SqlWorkbench v-else-if="activeTab === 'sql-workbench'" @refresh="loadData" />
+      <ConnectionSettings v-if="activeTab === 'connection'" @updated="loadData" />
+      <template v-else>
+        <p v-if="loading" class="status">Loading data...</p>
+        <div v-else-if="error" class="status error">
+          <p>Could not load data. {{ error }}</p>
+          <button type="button" @click="loadData">Retry</button>
+        </div>
+        <SqlWorkbench v-else-if="activeTab === 'sql-workbench'" @refresh="loadData" />
+        <div v-else-if="filteredSnapshots.length === 0" class="status">
+          <p>No snapshots match the current filters.</p>
+        </div>
+        <OverviewDashboard
+          v-else-if="activeTab === 'overview'"
+          :snapshots="filteredSnapshots"
+          :diffs="filteredDiffs"
+        />
+        <SnapshotTimeline
+          v-else-if="activeTab === 'timeline'"
+          :snapshots="filteredSnapshots"
+          :diffs-by-snapshot="diffsBySnapshot"
+        />
+        <RowHistory
+          v-else-if="activeTab === 'row-history'"
+          :snapshots="filteredSnapshots"
+          :diffs="filteredDiffs"
+        />
+        <DiffViewer
+          v-else-if="activeTab === 'diff-viewer'"
+          :snapshots="filteredSnapshots"
+          :diffs="filteredDiffs"
+        />
+        <ColumnHeatmap
+          v-else-if="activeTab === 'heatmap'"
+          :snapshots="filteredSnapshots"
+          :diffs="filteredDiffs"
+        />
+        <SnapshotExplorer
+          v-else-if="activeTab === 'snapshot-explorer'"
+          :snapshots="filteredSnapshots"
+          :diffs-by-snapshot="diffsBySnapshot"
+        />
+      </template>
     </section>
   </div>
 </template>

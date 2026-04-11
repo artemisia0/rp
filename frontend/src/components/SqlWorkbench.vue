@@ -1,10 +1,24 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
-const sql = ref(`-- Example writes (each statement creates a snapshot)
-INSERT INTO local.db.my_table VALUES (11, 'new row');
-UPDATE local.db.my_table SET data = 'updated' WHERE id = 2;
-DELETE FROM local.db.my_table WHERE id = 1;`);
+const defaultConnection = {
+  catalog: 'local',
+  namespace: 'db',
+  table: 'my_table',
+};
+
+const defaultSqlTemplate = `-- Example writes (each statement creates a snapshot)
+INSERT INTO <catalog>.<namespace>.<table> VALUES (11, 'new row');
+UPDATE <catalog>.<namespace>.<table> SET data = 'updated' WHERE id = 2;
+DELETE FROM <catalog>.<namespace>.<table> WHERE id = 1;`;
+
+const toSqlTemplate = (connection) =>
+  defaultSqlTemplate
+    .replaceAll('<catalog>', connection.catalog)
+    .replaceAll('<namespace>', connection.namespace)
+    .replaceAll('<table>', connection.table);
+
+const sql = ref(toSqlTemplate(defaultConnection));
 const running = ref(false);
 const result = ref(null);
 const error = ref(null);
@@ -41,19 +55,23 @@ const executeSql = async () => {
     running.value = false;
   }
 };
+
+onMounted(async () => {
+  try {
+    const res = await fetch('/api/connection');
+    if (!res.ok) return;
+    const payload = await res.json();
+    const current = payload?.current;
+    if (!current?.catalog || !current?.namespace || !current?.table) return;
+    sql.value = toSqlTemplate(current);
+  } catch {
+    // Keep fallback defaults when connection cannot be loaded.
+  }
+});
 </script>
 
 <template>
   <div class="sql">
-    <div class="intro">
-      <strong>Interactive SQL</strong>
-      <p>
-        Run Spark SQL statements against <code>local.db.my_table</code>.
-        Write operations (INSERT, UPDATE, DELETE) create new Iceberg snapshots
-        which will be visible in the visualization after execution.
-      </p>
-    </div>
-
     <label class="editor">
       SQL editor
       <textarea v-model="sql" spellcheck="false" />
@@ -64,16 +82,6 @@ const executeSql = async () => {
         {{ running ? 'Running...' : 'Execute SQL & Refresh' }}
       </button>
     </div>
-
-    <details class="tips">
-      <summary>SQL tips</summary>
-      <ul>
-        <li>Use <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code> to
-          create snapshots.</li>
-        <li>Run multiple statements separated by semicolons.</li>
-        <li>If you create a new table, use <code>CREATE DATABASE IF NOT EXISTS local.db</code>.</li>
-      </ul>
-    </details>
 
     <div v-if="running" class="status">Running SQL...</div>
     <div v-else-if="error && !result" class="status error">{{ error }}</div>
@@ -93,24 +101,6 @@ const executeSql = async () => {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.intro {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 12px 16px;
-  font-size: 14px;
-}
-
-.intro strong {
-  display: block;
-  color: #0f172a;
-}
-
-.intro p {
-  margin: 6px 0 0;
-  color: #475569;
 }
 
 .editor {
@@ -154,21 +144,6 @@ button.primary {
 button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-.tips {
-  font-size: 13px;
-  color: #475569;
-}
-
-.tips summary {
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.tips ul {
-  margin: 8px 0 0;
-  padding-left: 18px;
 }
 
 .status {
