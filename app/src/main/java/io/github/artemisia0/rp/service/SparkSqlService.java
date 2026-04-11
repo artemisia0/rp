@@ -9,10 +9,13 @@ import org.springframework.http.HttpStatus;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.util.Locale;
+import java.util.Set;
 
 @Service
 public class SparkSqlService {
 
+    private static final Set<String> ALLOWED_SQL_COMMANDS = Set.of("SELECT", "INSERT", "UPDATE", "DELETE");
     private final IcebergConnectionService connectionService;
     private SparkSession spark;
 
@@ -64,6 +67,7 @@ public class SparkSqlService {
 
         try {
             StringBuilder output = new StringBuilder();
+            int statementIndex = 0;
             
             // Split by semicolon to handle multiple statements
             String[] statements = sql.split(";");
@@ -71,18 +75,26 @@ public class SparkSqlService {
             for (String statement : statements) {
                 String trimmed = statement.trim();
                 if (trimmed.isEmpty()) continue;
+                statementIndex++;
+
+                String keyword = extractLeadingKeyword(trimmed);
+                if (!ALLOWED_SQL_COMMANDS.contains(keyword)) {
+                    String resolvedKeyword = keyword.isEmpty() ? "UNKNOWN" : keyword;
+                    String message = "Only SELECT, INSERT, UPDATE, and DELETE are allowed. "
+                        + "Statement " + statementIndex + " starts with: " + resolvedKeyword;
+                    output.append("Error executing statement: ").append(message).append("\n");
+                    return new SqlResponse(false, 1, output.toString(), message);
+                }
                 
                 try {
                     var result = spark.sql(trimmed);
                     
                     // If it's a query (SELECT), collect results
-                    if (trimmed.toLowerCase().startsWith("select") || 
-                        trimmed.toLowerCase().startsWith("show") ||
-                        trimmed.toLowerCase().startsWith("describe")) {
+                    if ("SELECT".equals(keyword)) {
                         String resultStr = result.showString(100, 20, false);
                         output.append(resultStr).append("\n");
                     } else {
-                        // For DML/DDL, just acknowledge execution
+                        // For non-query statements, just acknowledge execution
                         output.append("OK\n");
                     }
                 } catch (Exception e) {
@@ -96,5 +108,38 @@ public class SparkSqlService {
         } catch (Exception e) {
             return new SqlResponse(false, 1, "", e.getMessage());
         }
+    }
+
+    private String extractLeadingKeyword(String statement) {
+        String remaining = statement;
+        while (true) {
+            remaining = remaining.stripLeading();
+            if (remaining.startsWith("--")) {
+                int nextLine = remaining.indexOf('\n');
+                if (nextLine < 0) {
+                    return "";
+                }
+                remaining = remaining.substring(nextLine + 1);
+                continue;
+            }
+            if (remaining.startsWith("/*")) {
+                int commentEnd = remaining.indexOf("*/", 2);
+                if (commentEnd < 0) {
+                    return "";
+                }
+                remaining = remaining.substring(commentEnd + 2);
+                continue;
+            }
+            break;
+        }
+
+        int wordEnd = 0;
+        while (wordEnd < remaining.length() && Character.isLetter(remaining.charAt(wordEnd))) {
+            wordEnd++;
+        }
+        if (wordEnd == 0) {
+            return "";
+        }
+        return remaining.substring(0, wordEnd).toUpperCase(Locale.ROOT);
     }
 }
