@@ -7,6 +7,9 @@
 - run some sql ```insert``` queries in sql workbench tab
 - see the results and run some more queries
 
+### Quick video setup guide + creating demo table
+[![Watch the build guide](https://img.youtube.com/vi/eYckVe2K194/maxresdefault.jpg)](https://youtu.be/eYckVe2K194)
+
 ### A more detailed guide
 #### Install java-11-openjdk-devel
 - Download it: [java](https://adoptium.net/download?link=https%3A%2F%2Fgithub.com%2Fadoptium%2Ftemurin11-binaries%2Freleases%2Fdownload%2Fjdk-11.0.29%252B7%2FOpenJDK11U-jdk_x64_linux_hotspot_11.0.29_7.tar.gz&vendor=Adoptium)
