@@ -1,6 +1,6 @@
 ### Install guide at a high-level
 - install java 11.0.29 and add to PATH
-- run ``npm i``` in ```frontend``` directory
+- run ```npm i``` in ```frontend``` directory
 - run ```run.sh``` in project root directory
 - goto ```localhost:8080``` in a browser
 - create a default warehouse + iceberg table (in one click, there is a button "initialize")
